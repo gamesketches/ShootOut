@@ -40,7 +40,7 @@ class Reticle(pygame.sprite.Sprite):
         Use it for hit detection too"""
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
-        self.image, self.rect = load_image('reticle.bmp', -1)
+        self.image, self.rect = load_image('target_reticle.bmp', -1)
         self.shooting = False
 
     def update(self):
@@ -59,8 +59,9 @@ def main():
     
     #Initialize
     pygame.init()
-    screen = pygame.display.set_mode((700, 700))
+    screen = pygame.display.set_mode((700, 400))
     pygame.display.set_caption('Shoot Out!')
+    pygame.mouse.set_visible(0)
     
     #create the background
     background = pygame.Surface(screen.get_size())
@@ -70,22 +71,31 @@ def main():
     #Display Background
     screen.blit(background, (0,0))
     pygame.display.flip()
-
+    
     clock = pygame.time.Clock()
-    enemy = Enemy()
-    allsprites = pygame.sprite.RenderPlain((enemy))
-
+    bronemy = Enemy()
+    bronemy.rect.move(300, 300)
+    reticle = Reticle()
+    allsprites = pygame.sprite.RenderPlain((reticle, bronemy))
+    
     going = True
     while going:
         clock.tick(60)
-
-        enemy.update()
-
+        for event in pygame.event.get():
+            if event.type == QUIT:
+                going = False
+            elif event.type == KEYDOWN and event.key == K_ESCAPE:
+                going = False
+            elif event.type == MOUSEBUTTONDOWN:
+                print bronemy
+                if reticle.shoot(bronemy):
+                    bronemy.kill()
+        allsprites.update()
         screen.blit(background, (0,0))
         allsprites.draw(screen)
         pygame.display.flip()
-
-pygame.quit()
+    
+    pygame.quit()
 
 if __name__ == '__main__':
     main()
