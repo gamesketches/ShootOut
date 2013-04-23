@@ -34,3 +34,22 @@ class Enemy(pygame.sprite.Sprite):
         self.image = pygame.transform.scale(self.image, (self.rect.width + self.growthRate, self.rect.height + self.growthRate))
         if self.rect.width >= 100:
             self.shooting = True
+
+def main():
+    
+    #Initialize
+    pygame.init()
+    screen = pygame.display.set_mode((700, 700))
+    pygame.display.set_caption('Shoot Out!')
+    
+    #create the background
+    background = pygame.Surface(screen.get_size())
+    background = background.convert()
+    background.fill((250, 250, 250))
+    
+    #Display Background
+    screen.blit(background, (0,0)
+    pygame.display.flip()
+    
+    
+    
