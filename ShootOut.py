@@ -35,6 +35,26 @@ class Enemy(pygame.sprite.Sprite):
         if self.rect.width >= 100:
             self.shooting = True
 
+class Reticle(pygame.sprite.Sprite):
+    """Aiming reticle that shows the mouse's position.
+        Use it for hit detection too"""
+    def __init__(self):
+        pygame.sprite.Sprite.__init__(self)
+        self.image, self.rect = load_image('reticle.bmp', -1)
+        self.shooting = False
+
+    def update(self):
+        "update reticle with mouse position"
+        pos = pygame.mouse.get_pos()
+        self.rect.midtop = pos
+
+    def shoot(self, target):
+        "returns true shooting at an enemy"
+        if not self.shooting:
+            self.shooting = True
+            hitbox = self.rect
+            return hitbox.colliderect(target.rect)
+
 def main():
     
     #Initialize
