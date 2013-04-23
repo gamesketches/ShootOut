@@ -48,8 +48,24 @@ def main():
     background.fill((250, 250, 250))
     
     #Display Background
-    screen.blit(background, (0,0)
+    screen.blit(background, (0,0))
     pygame.display.flip()
-    
-    
-    
+
+    clock = pygame.time.Clock()
+    enemy = Enemy()
+    allsprites = pygame.sprite.RenderPlain((enemy))
+
+    going = True
+    while going:
+        clock.tick(60)
+
+        enemy.update()
+
+        screen.blit(background, (0,0))
+        allsprites.draw(screen)
+        pygame.display.flip()
+
+pygame.quit()
+
+if __name__ == '__main__':
+    main()
