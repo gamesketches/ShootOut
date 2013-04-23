@@ -74,7 +74,16 @@ def main():
     
     clock = pygame.time.Clock()
     bronemy = Enemy()
-    bronemy.rect.move(300, 300)
+    bronemy.rect = bronemy.rect.move((300,300))
+    enemies = pygame.sprite.Group()
+    #Create enemies
+    for i in range(4):
+        enemies.add(Enemy())
+    enemyList = enemies.sprites()
+    enemyList[0].rect = enemyList[0].rect.move((300,300))
+    enemyList[1].rect = enemyList[1].rect.move((100,50))
+    enemyList[2].rect = enemyList[2].rect.move((400,40))
+    enemyList[3].rect = enemyList[3].rect.move((50,50))
     reticle = Reticle()
     allsprites = pygame.sprite.RenderPlain((reticle, bronemy))
     
@@ -90,9 +99,15 @@ def main():
                 print bronemy
                 if reticle.shoot(bronemy):
                     bronemy.kill()
+                for i in enemies.sprites():
+                    print i
+                    if reticle.shoot(i):
+                        i.kill()
         allsprites.update()
+        enemies.update()
         screen.blit(background, (0,0))
         allsprites.draw(screen)
+        enemies.draw(screen)
         pygame.display.flip()
     
     pygame.quit()
