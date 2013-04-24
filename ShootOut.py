@@ -28,11 +28,14 @@ class Enemy(pygame.sprite.Sprite):
         self.image, self.rect = load_image('enemy.bmp', -1)
         self.growthRate = 5
         self.shooting = False
+        self.timer = 0
 
     def update(self):
         "Grow until a certain size, then destroy"""
-        self.image = pygame.transform.scale(self.image, (self.rect.width + self.growthRate, self.rect.height + self.growthRate))
-        if self.rect.width >= 100:
+        self.timer += 1
+        if self.timer > 120:
+            print "Bang!"
+            self.timer = 0
             self.shooting = True
 
 class Reticle(pygame.sprite.Sprite):
@@ -52,6 +55,12 @@ class Reticle(pygame.sprite.Sprite):
         hitbox = self.rect
         return hitbox.colliderect(target.rect)
 
+class Heart(pygame.sprite.Sprite):
+    """Basic class for lifebar hearts"""
+    def __init__(self):
+        pygame.sprite.Sprite.__init__(self)
+        self.image, self.rect = load_image('heart.bmp', -1)
+    
 def main():
     
     #Initialize
@@ -70,19 +79,27 @@ def main():
     pygame.display.flip()
     
     clock = pygame.time.Clock()
-    bronemy = Enemy()
-    bronemy.rect = bronemy.rect.move((300,300))
-    enemies = pygame.sprite.Group()
     #Create enemies
-    for i in range(4):
+    enemies = pygame.sprite.Group()
+    for i in range(3):
         enemies.add(Enemy())
     enemyList = enemies.sprites()
     enemyList[0].rect = enemyList[0].rect.move((300,300))
     enemyList[1].rect = enemyList[1].rect.move((100,50))
     enemyList[2].rect = enemyList[2].rect.move((400,40))
-    enemyList[3].rect = enemyList[3].rect.move((50,50))
+    #enemyList[3].rect = enemyList[3].rect.move((50,50))
+    #Create reticle
     reticle = Reticle()
-    allsprites = pygame.sprite.RenderPlain((reticle, bronemy))
+    #Create hearts
+    heart1 = Heart()
+    heart2 = Heart()
+    heart3 = Heart()
+    #Move hearts into position
+    heart1.rect = heart1.rect.move((540, 340))
+    heart2.rect = heart2.rect.move((590, 340))
+    heart3.rect = heart3.rect.move((640, 340))
+    hearts = [heart1, heart2, heart3]
+    allsprites = pygame.sprite.RenderPlain((reticle, hearts))
     
     going = True
     while going:
@@ -93,13 +110,20 @@ def main():
             elif event.type == KEYDOWN and event.key == K_ESCAPE:
                 going = False
             elif event.type == MOUSEBUTTONDOWN:
-                if reticle.shoot(bronemy):
-                    bronemy.kill()
                 for i in enemies.sprites():
                     if reticle.shoot(i):
                         i.kill()
         allsprites.update()
         enemies.update()
+
+        for i in enemies.sprites():
+            if i.shooting:
+                removing = hearts.pop(0)
+                removing.kill()
+                i.kill()
+                if len(hearts) == 0:
+                    pygame.quit()
+        
         screen.blit(background, (0,0))
         allsprites.draw(screen)
         enemies.draw(screen)
