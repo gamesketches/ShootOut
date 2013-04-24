@@ -41,7 +41,6 @@ class Reticle(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
         self.image, self.rect = load_image('target_reticle.bmp', -1)
-        self.shooting = False
 
     def update(self):
         "update reticle with mouse position"
@@ -50,10 +49,8 @@ class Reticle(pygame.sprite.Sprite):
 
     def shoot(self, target):
         "returns true shooting at an enemy"
-        if not self.shooting:
-            self.shooting = True
-            hitbox = self.rect
-            return hitbox.colliderect(target.rect)
+        hitbox = self.rect
+        return hitbox.colliderect(target.rect)
 
 def main():
     
@@ -96,11 +93,9 @@ def main():
             elif event.type == KEYDOWN and event.key == K_ESCAPE:
                 going = False
             elif event.type == MOUSEBUTTONDOWN:
-                print bronemy
                 if reticle.shoot(bronemy):
                     bronemy.kill()
                 for i in enemies.sprites():
-                    print i
                     if reticle.shoot(i):
                         i.kill()
         allsprites.update()
