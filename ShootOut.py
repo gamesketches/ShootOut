@@ -80,17 +80,24 @@ def main():
     
     clock = pygame.time.Clock()
     enemySpawn = 0
+    spawnTime = 50
     #Create enemies
     enemies = pygame.sprite.Group()
     tempEnemy = Enemy()
     tempEnemy.rect = tempEnemy.rect.move(200,200)
     enemies.add(tempEnemy)
+    
     #Create reticle
     reticle = Reticle()
+    
     #Create hearts
     heart1 = Heart()
     heart2 = Heart()
     heart3 = Heart()
+    
+    #Score
+    score = 0
+    
     #Move hearts into position
     heart1.rect = heart1.rect.move((540, 340))
     heart2.rect = heart2.rect.move((590, 340))
@@ -110,8 +117,11 @@ def main():
                 for i in enemies.sprites():
                     if reticle.shoot(i):
                         i.kill()
+                        score += 1
+                        if (score % 10) == 0:
+                            spawnTime -= 5
         enemySpawn += 1
-        if enemySpawn >= 50:
+        if enemySpawn >= spawnTime:
             tempEnemy = Enemy()
             tempEnemy.rect = tempEnemy.rect.move((70 + random.randrange(0, 500), 70 + random.randrange(0,200)))
             enemies.add(tempEnemy)
