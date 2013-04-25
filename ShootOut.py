@@ -73,6 +73,9 @@ def main():
     background = pygame.Surface(screen.get_size())
     background = background.convert()
     background.fill((250, 250, 250))
+    redBackground = pygame.Surface(screen.get_size())
+    redBackground = redBackground.convert()
+    redBackground.fill((250,0,0))
     
     #Display Background
     screen.blit(background, (0,0))
@@ -81,6 +84,7 @@ def main():
     clock = pygame.time.Clock()
     enemySpawn = 0
     spawnTime = 50
+    flashTime = -1
     #Create enemies
     enemies = pygame.sprite.Group()
     tempEnemy = Enemy()
@@ -134,10 +138,15 @@ def main():
                 removing = hearts.pop(0)
                 removing.kill()
                 i.kill()
+                flashTime = 5
                 if len(hearts) == 0:
                     pygame.quit()
-        
-        screen.blit(background, (0,0))
+
+        if flashTime >= 0:
+            screen.blit(redBackground,(0,0))
+            flashTime -= 1
+        else:
+            screen.blit(background, (0,0))
         allsprites.draw(screen)
         enemies.draw(screen)
         pygame.display.flip()
