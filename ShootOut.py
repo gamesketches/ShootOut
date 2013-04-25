@@ -1,4 +1,4 @@
-import pygame, sys, os
+import pygame, sys, os, random
 from pygame.locals import *
 
 if not pygame.font: print 'Warning, fonts disabled'
@@ -79,15 +79,12 @@ def main():
     pygame.display.flip()
     
     clock = pygame.time.Clock()
+    enemySpawn = 0
     #Create enemies
     enemies = pygame.sprite.Group()
-    for i in range(3):
-        enemies.add(Enemy())
-    enemyList = enemies.sprites()
-    enemyList[0].rect = enemyList[0].rect.move((300,300))
-    enemyList[1].rect = enemyList[1].rect.move((100,50))
-    enemyList[2].rect = enemyList[2].rect.move((400,40))
-    #enemyList[3].rect = enemyList[3].rect.move((50,50))
+    tempEnemy = Enemy()
+    tempEnemy.rect = tempEnemy.rect.move(200,200)
+    enemies.add(tempEnemy)
     #Create reticle
     reticle = Reticle()
     #Create hearts
@@ -113,6 +110,12 @@ def main():
                 for i in enemies.sprites():
                     if reticle.shoot(i):
                         i.kill()
+        enemySpawn += 1
+        if enemySpawn >= 50:
+            tempEnemy = Enemy()
+            tempEnemy.rect = tempEnemy.rect.move((70 + random.randrange(0, 500), 70 + random.randrange(0,200)))
+            enemies.add(tempEnemy)
+            enemySpawn = 0
         allsprites.update()
         enemies.update()
 
