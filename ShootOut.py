@@ -71,9 +71,10 @@ def main():
     pygame.mouse.set_visible(0)
     
     #create the background
-    background = pygame.Surface(screen.get_size())
-    background = background.convert()
-    background.fill((250, 250, 250))
+    #background = pygame.Surface(screen.get_size())
+    #background = background.convert()
+    #background.fill((250, 250, 250))
+    background = pygame.image.load(os.path.join(data_dir, "forest.bmp")).convert()
     redBackground = pygame.Surface(screen.get_size())
     redBackground = redBackground.convert()
     redBackground.fill((250,0,0))
